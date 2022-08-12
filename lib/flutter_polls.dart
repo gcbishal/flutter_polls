@@ -35,11 +35,11 @@ class FlutterPolls extends HookWidget {
     this.votedPollOptionsRadius,
     this.votedBackgroundColor = const Color(0xffEEF0EB),
     this.votedProgressColor = const Color(0xff84D2F6),
-    this.leadingVotedProgressColor = const Color(0xff0496FF),
-    this.votedCheckMark,
+    this.leadingVotedProgessColor = const Color(0xff0496FF),
+    this.votedCheckmark,
     this.votedPercentageTextStyle,
     this.votedAnimationDuration = 1000,
-  }) : _isLoading = false;
+  }) : _isloading = false;
 
   /// The id of the poll.
   /// This id is used to identify the poll.
@@ -53,9 +53,9 @@ class FlutterPolls extends HookWidget {
   final bool hasVoted;
 
   /// Checks if the [onVoted] execution is completed or not
-  /// it is true, if the [onVoted] execution is ongoing and
+  /// it is true, if the [onVoted] exection is ongoing and
   /// false, if completed
-  final bool _isLoading;
+  final bool _isloading;
 
   /// If a user has already voted in this poll.
   /// It is ignored if [hasVoted] is set to false or not set at all.
@@ -184,11 +184,11 @@ class FlutterPolls extends HookWidget {
 
   /// Color of the leading progress bar of a [PollOption] when the user has voted.
   /// Defaults to [const Color(0xff0496FF)].
-  final Color? leadingVotedProgressColor;
+  final Color? leadingVotedProgessColor;
 
-  /// Widget for the check-mark of a [PollOption] when the user has voted.
+  /// Widget for the checkmark of a [PollOption] when the user has voted.
   /// Defaults to [Icons.check_circle_outline_rounded].
-  final Widget? votedCheckMark;
+  final Widget? votedCheckmark;
 
   /// TextStyle of the percentage of a [PollOption] when the user has voted.
   final TextStyle? votedPercentageTextStyle;
@@ -204,13 +204,11 @@ class FlutterPolls extends HookWidget {
   /// Visible until the [onVoted] execution is completed,
   final Widget? loadingWidget;
 
-  double _calcPercent(int a, int b) => (a == 0 && b == 0) ? 0 : a / b;
-
   @override
   Widget build(BuildContext context) {
     final hasPollEnded = useState(pollEnded);
     final userHasVoted = useState(hasVoted);
-    final isLoading = useState(_isLoading);
+    final isLoading = useState(_isloading);
     final votedOption = useState<PollOption?>(hasVoted == false
         ? null
         : pollOptions
@@ -251,8 +249,7 @@ class FlutterPolls extends HookWidget {
                             barRadius: votedPollOptionsRadius ??
                                 const Radius.circular(8),
                             padding: EdgeInsets.zero,
-                            percent: _calcPercent(
-                                pollOption.votes, totalVotes.value),
+                            percent: pollOption.votes / totalVotes.value,
                             animation: true,
                             animationDuration: votedAnimationDuration,
                             backgroundColor: votedBackgroundColor,
@@ -265,7 +262,7 @@ class FlutterPolls extends HookWidget {
                                                   : option,
                                         )
                                         .votes
-                                ? leadingVotedProgressColor
+                                ? leadingVotedProgessColor
                                 : votedProgressColor,
                             center: Container(
                               width: double.infinity,
@@ -278,7 +275,7 @@ class FlutterPolls extends HookWidget {
                                   const SizedBox(width: 10),
                                   if (votedOption.value != null &&
                                       votedOption.value?.id == pollOption.id)
-                                    votedCheckMark ??
+                                    votedCheckmark ??
                                         const Icon(
                                           Icons.check_circle_outline_rounded,
                                           color: Colors.black,
@@ -286,7 +283,7 @@ class FlutterPolls extends HookWidget {
                                         ),
                                   const Spacer(),
                                   Text(
-                                    '${(_calcPercent(pollOption.votes, totalVotes.value) * 100).toStringAsFixed(1)}%',
+                                    '${(pollOption.votes / totalVotes.value * 100).toStringAsFixed(1)}%',
                                     style: votedPercentageTextStyle,
                                   ),
                                 ],
